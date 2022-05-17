@@ -1,0 +1,39 @@
+.calculation{
+  background-image: url('../../../assets/images/pexels-mikhail-nilov-8297031.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  .container{
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    .box-form{
+      margin: 0 auto;
+      .title-form{
+        display: flex;
+        h2{
+          margin: 6px;
+        }
+        img{
+          height:30px;
+          width: 34px;
+          align-self: center;
+        }
+      }
+      form{
+        background-color: #f5f5f5;
+        margin: 0 auto;
+        border-radius: 8px;
+        .col{
+          min-width: 200px;
+          max-width: 300px;
+          margin: 10px 0;
+        }
+      }
+      .box-button{
+        .btn{
+          width: 160px;
+        }
+      }
+    }
+  }
+}

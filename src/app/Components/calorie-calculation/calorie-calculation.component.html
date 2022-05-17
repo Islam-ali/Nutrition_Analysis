@@ -1,0 +1,49 @@
+<section class="calculation py-5">
+  <div class="container">
+    <div class="box-form col-8 py-5">
+      <div class="my-3">
+        <app-result-calculation *ngIf="calc" [result] = "calc"></app-result-calculation>
+      </div>
+    <form class="col-12 row py-3" [formGroup]="myForm" (ngSubmit)="onSubmit(myForm)">
+      <div class="title-form">
+        <h2>Calorie Calculation</h2>
+        <img src="../../../assets/images/icons8-calories-calculator-64.png" alt="calories-calculator.png">
+      </div>
+        <div class="col">
+          <input type="text" required formControlName="weight" class="form-control" placeholder="Weight" aria-label="Weight">
+        </div>
+        <div class="col">
+          <input type="text" required formControlName="height" class="form-control" placeholder="height(sm)" aria-label="height(sm)">
+        </div>
+        <div class="col">
+          <input type="text" required formControlName="age" class="form-control" placeholder="age" aria-label="age">
+        </div>
+        <div class="col">
+          <select class="form-select" required formControlName="activity">
+            <option value="1.2">Low activity</option>
+            <option value="1.5">middle activity</option>
+            <option value="1.7">High activity</option>
+          </select>
+        </div>
+        <div class="col d-flex">
+          <span>gender :</span>
+          <div class="form-check mx-2">
+            <input class="form-check-input" type="radio" required formControlName="gender" value="male" name="gender" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Male
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" required formControlName="gender" value="female" name="gender" id="flexRadioDefault2" checked>
+            <label class="form-check-label" for="flexRadioDefault2">
+              Female
+            </label>
+          </div>
+        </div>
+        <div class="box-button">
+          <button [disabled]="myForm.invalid" type="submit" class="btn btn-primary">calculation <span *ngIf="loading">...</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,448 @@
+<div
+  class="container-login100"
+  style="background-image: url('../../../assets/images/pexels-mikhail-nilov-8297031.jpg')"
+>
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Get Your Meal Nutrition Form -->
+        <div style="max-width: 80%;margin: 0 auto;" class="col p-3">
+          <div>
+            <form
+              id="contact"
+              style="border-radius: 20px"
+              [formGroup]="NutritionFormPOST"
+            >
+              <h3>Get Your Meal Nutrition 🍴</h3>
+              <h4>Free Nutrition Analysis</h4>
+              <h4 style="text-align: center; color: green">
+                Enter an ingredient list list for what you are cooking, like "1
+                cup rice, 10 oz chickpeas", etc. <br />
+                Enter each ingredient on a new line.
+              </h4>
+              <fieldset>
+                <textarea
+                  placeholder="1 cup rice,&#10;10 oz chickpeas"
+                  formControlName="Inger"
+                  class="form-control"
+                  id="Inger"
+                  required
+                  tabindex="5"
+                  required
+                >
+                </textarea>
+                <!-- Validation in Angular 13 (update)
+          Old Version
+            //
+            <div *ngIf="f.Inger.touched && f.Inger.invalid" class="alert alert-danger">
+
+            <div *ngIf="f.Inger.errors && f.Inger.errors.required">Inger is required.</div>
+
+            <div *ngIf="f.Inger.errors && f.Inger.errors.minlength">Inger should be 3 character.</div>
+
+            </div>
+            /////////
+        -->
+                <div
+                  *ngIf="f['Inger'].touched && f['Inger'].invalid"
+                  class="alert alert-danger"
+                >
+                  <div
+                    *ngIf="f['Inger'].errors && f['Inger'].errors['required']"
+                  >
+                    **ingredient is required.
+                  </div>
+                  <div
+                    *ngIf="f['Inger'].errors && f['Inger'].errors['minlength']"
+                  >
+                    **ingredient should be 3 character.
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <h4 style="text-align: left; color: green">
+                  *Select type of Analysis
+                </h4>
+                <select
+                  class="form-select"
+                  formControlName="IsCooking"
+                  aria-placeholder="Please Select Your Type Analysis"
+                  class="form-control"
+                  id="IsCooking"
+                  required
+                >
+                  <option value="cooking">cooking (Defult)</option>
+                  <option value="logging">logging</option>
+                </select>
+                <div
+                  *ngIf="f['IsCooking'].touched && f['IsCooking'].invalid"
+                  class="alert alert-danger"
+                >
+                  <div
+                    *ngIf="
+                      f['IsCooking'].errors && f['IsCooking'].errors['required']
+                    "
+                  >
+                    **Choose is required.
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <button
+                  type="submit"
+                  id="contact-submit"
+                  [disabled]="
+                    NutritionFormPOST.invalid || NutritionFormPOST == null
+                  "
+                  (click)="saveData()"
+                >
+                  Analyze
+                </button>
+                <button
+                  type="submit"
+                  id="contact-submit"
+                  *ngIf="NutritionFormPOST.invalid == false"
+                  (click)="NewRecipe()"
+                >
+                  New Recipe
+                </button>
+              </fieldset>
+            </form>
+          </div>
+
+          <!-- Loader of Get Data -->
+          <ngx-spinner
+            bdColor="rgba(51, 51, 51, 0.8)"
+            size="default"
+            type="ball-spin-clockwise"
+          >
+            <p style="color: white; font-weight: bold">
+              جارى تحميل البيانات برجاء الانتظار ...
+            </p>
+          </ngx-spinner>
+
+          <!-- Table of Add summary breakdown for entered ingredients in a list -->
+          <div *ngIf="this.invalid">
+            <div *ngIf="this.details.length > 0">
+              <table
+                class="table table-hover table-light"
+                style="margin-top: -90px"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Food</th>
+                    <th scope="col">Calories</th>
+                    <th scope="col">Weight</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of details">
+                    <ng-container *ngIf="item != undefined">
+                      <td *ngFor="let x of item.split(' ')">{{ x }}</td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!--
+      Table of Add summary breakdown for entered ingredients in a list using IngredientStructure Model
+      using API https://api.edamam.com/api/nutrition-data
+      available in Url https://developer.edamam.com/edamam-docs-nutrition-api-old
+      but My DEVELOPER Account Not Access about it
+     -->
+
+        <!-- <div>
+      <table class="table table-hover table-light" style="margin-top: -90px;">
+        <thead>
+          <tr>
+            <th scope="col">Qty	</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Food</th>
+            <th scope="col">Calories</th>
+            <th scope="col">Weight</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr  *ngFor="let RootObjectIngr of RootObjectIngr; let i =index;">
+            <td >{{RootObjectIngr.ingredients.parsed.quantity}}</td>
+            <td>{{RootObjectIngr.ingredients.parsed.measure}}</td>
+            <td>{{RootObjectIngr.ingredients.parsed.food}}</td>
+            <td>{{RootObjectIngr.calories}}</td>
+            <td>{{RootObjectIngr.totalWeight}}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      </div> -->
+
+        <!-- ==================================================================== -->
+        <!-- Nutrition Facts -->
+        <!-- ==================================================================== -->
+        <!-- Nutrition Facts -->
+        <div *ngIf="this.invalid" style="max-width: 30%;min-width: 300px;margin: 0 auto;" class="col content p-3">
+          <form id="contact" style="border-radius: 15px">
+            <h3 style="text-align: center; border-bottom: 3.5px solid black">
+              Nutrition Facts &#9829;
+            </h3>
+            <p style="text-align: center">Amount Per Serving</p>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Info</th>
+                  <th scope="col">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Total Calories</th>
+                  <td>{{ RootObjectPost.calories | number: "1.2-2" }} kcal</td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Fat</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.FAT.quantity
+                        | number: "1.2-2"
+                    }}
+                    g <br />
+                    {{
+                      RootObjectPost.totalDaily.FAT.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Saturated Fat</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.FASAT.quantity
+                        | number: "1.2-2"
+                    }}
+                    g <br />
+                    {{
+                      RootObjectPost.totalDaily.FASAT.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Trans Fat -</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.FAMS.quantity
+                        | number: "1.2-2"
+                    }}g
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Cholesterol</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.CHOLE.quantity
+                        | number: "1.2-2"
+                    }}
+                    mg <br />
+                    {{
+                      RootObjectPost.totalDaily.CHOLE.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Sodium</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.NA.quantity
+                        | number: "1.2-2"
+                    }}
+                    mg <br />
+                    {{
+                      RootObjectPost.totalDaily.NA.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Total Carbohydrate</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.CHOCDF.quantity
+                        | number: "1.2-2"
+                    }}g <br />
+                    {{
+                      RootObjectPost.totalDaily.CHOCDF.quantity
+                        | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Dietary Fiber</th>
+                  <td>
+                    <div
+                      *ngIf="
+                        NutritionFormPOST.controls['IsCooking'].value ===
+                        'logging'
+                      "
+                    >
+                      {{
+                        RootObjectPost.totalNutrients.FIBTG.quantity
+                          | number: "1.2-2"
+                      }}
+                      g <br />
+                      {{
+                        RootObjectPost.totalDaily.FIBTG.quantity
+                          | number: "1.2-2"
+                      }}
+                      %
+                    </div>
+                    <div
+                      *ngIf="
+                        NutritionFormPOST.controls['IsCooking'].value ===
+                        'cooking'
+                      "
+                    >
+                      <div
+                        *ngIf="RootObjectPost.totalNutrients.FIBTG != undefined"
+                      >
+                        {{
+                          RootObjectPost.totalNutrients.FIBTG.quantity
+                            | number: "1.2-2"
+                        }}
+                        g <br />
+                        {{
+                          RootObjectPost.totalDaily.FIBTG.quantity
+                            | number: "1.2-2"
+                        }}
+                        %
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr></tr>
+
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Total Sugars</th>
+                  <td>
+                    <div
+                      *ngIf="
+                        NutritionFormPOST.controls['IsCooking'].value ===
+                        'logging'
+                      "
+                    >
+                      <div
+                        *ngIf="RootObjectPost.totalNutrients.SUGAR != undefined"
+                      >
+                        {{
+                          RootObjectPost.totalNutrients.SUGAR.quantity
+                            | number: "1.2-2"
+                        }}
+                        g
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        NutritionFormPOST.controls['IsCooking'].value ===
+                        'cooking'
+                      "
+                    >
+                      <div
+                        *ngIf="RootObjectPost.totalNutrients.SUGAR != undefined"
+                      >
+                        {{
+                          RootObjectPost.totalNutrients.SUGAR.quantity
+                            | number: "1.2-2"
+                        }}
+                        g
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Protein</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.PROCNT.quantity
+                        | number: "1.2-2"
+                    }}
+                    g <br />
+                    {{
+                      RootObjectPost.totalDaily.PROCNT.quantity
+                        | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Vitamin (D)</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.VITD.quantity
+                        | number: "1.2-2"
+                    }}
+                    µg <br />
+                    {{
+                      RootObjectPost.totalDaily.VITD.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Calcium</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.CA.quantity
+                        | number: "1.2-2"
+                    }}
+                    mg <br />
+                    {{
+                      RootObjectPost.totalDaily.CA.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Iron</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.FE.quantity
+                        | number: "1.2-2"
+                    }}
+                    mg <br />
+                    {{
+                      RootObjectPost.totalDaily.FE.quantity | number: "1.2-2"
+                    }}
+                    %
+                  </td>
+                </tr>
+                <tr *ngFor="let RootObjectPost of RootObjectPost">
+                  <th scope="row">Potassium</th>
+                  <td>
+                    {{
+                      RootObjectPost.totalNutrients.K.quantity | number: "1.2-2"
+                    }}
+                    mg <br />
+                    {{ RootObjectPost.totalDaily.K.quantity | number: "1.2-2" }}
+                    %
+                  </td>
+                </tr>
+              </tbody>
+              <p style="color: red; text-align: center; font-size: small">
+                *Percent Daily Values are based on a 2000 calorie diet
+              </p>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
